@@ -1,0 +1,765 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#263c91">
+<title>Aprende Idiomas</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eef1f8;
+    color: #24304b;
+}
+
+.app {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100vh;
+    margin: auto;
+    background: #f7f8fc;
+    position: relative;
+    padding-bottom: 85px;
+}
+
+header {
+    background: linear-gradient(135deg,#263c91,#6579ec);
+    color: white;
+    padding: 25px 20px;
+    border-radius: 0 0 25px 25px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+header h1 {
+    margin-top: 25px;
+    font-size: 27px;
+}
+
+header p {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.contenido {
+    padding: 20px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.idioma {
+    background: white;
+    padding: 16px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    box-shadow: 0 3px 10px #00000008;
+}
+
+.idioma:hover,
+.idioma.seleccionado {
+    border-color: #5267dc;
+    background: #f0f2ff;
+}
+
+.bandera {
+    font-size: 35px;
+}
+
+.idioma h3 {
+    font-size: 16px;
+}
+
+.idioma p {
+    font-size: 12px;
+    color: gray;
+    margin-top: 4px;
+}
+
+.tarjeta {
+    background: white;
+    padding: 20px;
+    border-radius: 17px;
+    margin-top: 18px;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.boton {
+    background: #5267dc;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    width: 100%;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.boton:hover {
+    background: #394eb9;
+}
+
+.palabra {
+    font-size: 28px;
+    font-weight: bold;
+    color: #5267dc;
+    margin: 12px 0;
+}
+
+.opcion {
+    display: block;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 12px;
+    width: 100%;
+    text-align: left;
+}
+
+.opcion:hover {
+    border-color: #5267dc;
+    background: #f0f2ff;
+}
+
+.correcta {
+    background: #d9f7e5 !important;
+    border-color: #26a269 !important;
+}
+
+.incorrecta {
+    background: #ffe1df !important;
+    border-color: #dc6256 !important;
+}
+
+.progreso {
+    height: 9px;
+    background: #e1e5f0;
+    border-radius: 20px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progreso div {
+    height: 100%;
+    width: 0%;
+    background: #35b982;
+    transition: .3s;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 13px 5px;
+    box-shadow: 0 -3px 12px #0000000c;
+}
+
+nav button {
+    background: none;
+    color: #78849a;
+    font-size: 12px;
+}
+
+nav button span {
+    display: block;
+    font-size: 23px;
+    margin-bottom: 4px;
+}
+
+nav button.activo {
+    color: #5267dc;
+    font-weight: bold;
+}
+
+.seccion {
+    display: none;
+}
+
+.seccion.activa {
+    display: block;
+}
+
+.resultado {
+    text-align: center;
+    padding: 25px 10px;
+}
+
+.resultado h2 {
+    font-size: 27px;
+    color: #5267dc;
+}
+
+small {
+    color: #777;
+}
+
+.oculto {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <div class="logo">🌎 APRENDO IDIOMAS</div>
+    <h1>¡Hola! 👋</h1>
+    <p>Aprende un nuevo idioma cada día.</p>
+
+    <div style="margin-top:22px">
+        <b>Tu progreso</b>
+        <div class="progreso">
+            <div id="barraGeneral"></div>
+        </div>
+        <small id="porcentaje" style="color:white">0% completado</small>
+    </div>
+</header>
+
+<div class="contenido">
+
+<!-- INICIO -->
+<section id="inicio" class="seccion activa">
+
+<h2>🌎 Elige tu idioma</h2>
+
+<div class="idioma seleccionado" onclick="elegirIdioma('ingles',this)">
+    <span class="bandera">🇬🇧</span>
+    <div>
+        <h3>Inglés</h3>
+        <p>Aprende English desde cero</p>
+    </div>
+</div>
+
+<div class="idioma" onclick="elegirIdioma('portugues',this)">
+    <span class="bandera">🇧🇷</span>
+    <div>
+        <h3>Portugués</h3>
+        <p>Aprende Português desde cero</p>
+    </div>
+</div>
+
+<div class="idioma" onclick="elegirIdioma('espanol',this)">
+    <span class="bandera">🇪🇸</span>
+    <div>
+        <h3>Español</h3>
+        <p>Mejora tu español</p>
+    </div>
+</div>
+
+<div class="tarjeta">
+    <h3>📚 Tu próxima lección</h3>
+    <p id="nombreLeccion" style="margin-top:10px">
+        Inglés: Saludos y presentaciones
+    </p>
+    <button class="boton" onclick="iniciarLeccion()">
+        COMENZAR A APRENDER →
+    </button>
+</div>
+
+<div class="tarjeta">
+    <h3>💡 Palabra del día</h3>
+    <div class="palabra" id="palabraDia">HELLO</div>
+    <p id="traduccionDia">Hola</p>
+    <button class="boton" onclick="escuchar(palabraDia.innerText)">
+        🔊 Escuchar pronunciación
+    </button>
+</div>
+
+</section>
+
+<!-- LECCIONES -->
+<section id="lecciones" class="seccion">
+
+<h2>📝 Mis lecciones</h2>
+
+<div class="tarjeta">
+    <h3 id="tituloLeccion">Lección 1</h3>
+    <p id="numeroPregunta" style="margin-top:10px">Pregunta 1 de 5</p>
+
+    <div class="progreso">
+        <div id="barraLeccion"></div>
+    </div>
+
+    <h2 id="pregunta" style="margin-top:25px">
+        ¿Cómo se dice Hola en inglés?
+    </h2>
+
+    <div id="opciones"></div>
+
+    <p id="mensaje" style="margin-top:15px;font-weight:bold"></p>
+
+    <button id="siguiente" class="boton oculto" onclick="siguientePregunta()">
+        SIGUIENTE →
+    </button>
+</div>
+
+<div id="final" class="tarjeta resultado oculto">
+    <div style="font-size:55px">🏆</div>
+    <h2>¡Excelente trabajo!</h2>
+    <p id="resumen" style="margin-top:15px"></p>
+    <button class="boton" onclick="mostrarSeccion('inicio')">
+        VOLVER AL INICIO
+    </button>
+</div>
+
+</section>
+
+<!-- VOCABULARIO -->
+<section id="vocabulario" class="seccion">
+
+<h2>📚 Vocabulario</h2>
+<p>Aprende palabras importantes de cada idioma.</p>
+
+<div id="listaPalabras"></div>
+
+</section>
+
+<!-- PERFIL -->
+<section id="perfil" class="seccion">
+
+<h2>🏆 Mi progreso</h2>
+
+<div class="tarjeta resultado">
+    <div style="font-size:50px">🥇</div>
+    <h2>Mi aprendizaje</h2>
+    <p>Continúa practicando todos los días.</p>
+</div>
+
+<div class="tarjeta">
+    <h3>⭐ Puntos acumulados</h3>
+    <div class="palabra" id="puntos">0</div>
+</div>
+
+<div class="tarjeta">
+    <h3>✅ Respuestas correctas</h3>
+    <div class="palabra" id="correctas">0</div>
+</div>
+
+<div class="tarjeta">
+    <h3>📖 Lecciones terminadas</h3>
+    <div class="palabra" id="terminadas">0</div>
+</div>
+
+</section>
+
+</div>
+
+<nav>
+    <button class="activo" onclick="mostrarSeccion('inicio',this)">
+        <span>🏠</span>Inicio
+    </button>
+
+    <button onclick="mostrarSeccion('lecciones',this)">
+        <span>📝</span>Lecciones
+    </button>
+
+    <button onclick="mostrarSeccion('vocabulario',this)">
+        <span>📚</span>Palabras
+    </button>
+
+    <button onclick="mostrarSeccion('perfil',this)">
+        <span>🏆</span>Progreso
+    </button>
+</nav>
+
+</div>
+
+<script>
+
+// BASE DE DATOS DE LOS IDIOMAS
+
+const idiomas = {
+
+ingles: {
+    nombre:"Inglés",
+    palabra:"HELLO",
+    traduccion:"Hola",
+    preguntas:[
+        ["¿Cómo se dice Hola?","Hello",["Hello","Goodbye","Please"]],
+        ["¿Cómo se dice Gracias?","Thank you",["Sorry","Thank you","Good morning"]],
+        ["¿Qué significa Good morning?","Buenos días",["Buenas noches","Buenos días","Adiós"]],
+        ["¿Cómo se dice Por favor?","Please",["Please","Hello","Thank you"]],
+        ["¿Qué significa Goodbye?","Adiós",["Hola","Gracias","Adiós"]]
+    ],
+    palabras:[
+        ["Hello","Hola"],
+        ["Good morning","Buenos días"],
+        ["Thank you","Gracias"],
+        ["Please","Por favor"],
+        ["Goodbye","Adiós"],
+        ["Water","Agua"],
+        ["House","Casa"],
+        ["Friend","Amigo"],
+        ["Love","Amor"],
+        ["School","Escuela"]
+    ]
+},
+
+portugues: {
+    nombre:"Portugués",
+    palabra:"OLÁ",
+    traduccion:"Hola",
+    preguntas:[
+        ["¿Cómo se dice Hola?","Olá",["Obrigado","Olá","Tchau"]],
+        ["¿Cómo se dice Gracias?","Obrigado",["Por favor","Bom dia","Obrigado"]],
+        ["¿Qué significa Bom dia?","Buenos días",["Buenas noches","Buenos días","Adiós"]],
+        ["¿Cómo se dice Por favor?","Por favor",["Olá","Por favor","Tchau"]],
+        ["¿Qué significa Tchau?","Adiós",["Hola","Gracias","Adiós"]]
+    ],
+    palabras:[
+        ["Olá","Hola"],
+        ["Bom dia","Buenos días"],
+        ["Obrigado","Gracias"],
+        ["Por favor","Por favor"],
+        ["Tchau","Adiós"],
+        ["Água","Agua"],
+        ["Casa","Casa"],
+        ["Amigo","Amigo"],
+        ["Amor","Amor"],
+        ["Escola","Escuela"]
+    ]
+},
+
+espanol: {
+    nombre:"Español",
+    palabra:"HOLA",
+    traduccion:"Saludo",
+    preguntas:[
+        ["¿Cuál es un saludo?","Hola",["Gracias","Hola","Adiós"]],
+        ["¿Qué expresa agradecimiento?","Gracias",["Por favor","Adiós","Gracias"]],
+        ["¿Cómo saludamos por la mañana?","Buenos días",["Buenas noches","Buenos días","Hasta luego"]],
+        ["¿Qué expresión indica cortesía?","Por favor",["Adiós","Por favor","Hola"]],
+        ["¿Cómo nos despedimos?","Adiós",["Gracias","Hola","Adiós"]]
+    ],
+    palabras:[
+        ["Hola","Saludo"],
+        ["Buenos días","Saludo matutino"],
+        ["Gracias","Agradecimiento"],
+        ["Por favor","Cortesía"],
+        ["Adiós","Despedida"]
+    ]
+}
+
+};
+
+// VARIABLES
+
+let idiomaActual = "ingles";
+let preguntaActual = 0;
+let puntos = Number(localStorage.getItem("puntos") || 0);
+let correctas = Number(localStorage.getItem("correctas") || 0);
+let terminadas = Number(localStorage.getItem("terminadas") || 0);
+let respuestasCorrectas = 0;
+let respondida = false;
+
+// CAMBIAR IDIOMA
+
+function elegirIdioma(id,elemento) {
+
+    idiomaActual = id;
+
+    document.querySelectorAll(".idioma").forEach(item=>{
+        item.classList.remove("seleccionado");
+    });
+
+    elemento.classList.add("seleccionado");
+
+    let idioma = idiomas[id];
+
+    document.getElementById("nombreLeccion").innerText =
+        idioma.nombre + ": Saludos y presentaciones";
+
+    document.getElementById("palabraDia").innerText =
+        idioma.palabra;
+
+    document.getElementById("traduccionDia").innerText =
+        idioma.traduccion;
+
+    cargarVocabulario();
+
+}
+
+// INICIAR LECCIÓN
+
+function iniciarLeccion() {
+
+    preguntaActual = 0;
+    respuestasCorrectas = 0;
+
+    document.getElementById("final").classList.add("oculto");
+
+    mostrarSeccion("lecciones");
+
+    cargarPregunta();
+
+}
+
+// CARGAR PREGUNTAS
+
+function cargarPregunta() {
+
+    let datos = idiomas[idiomaActual].preguntas;
+    let pregunta = datos[preguntaActual];
+
+    respondida = false;
+
+    document.getElementById("tituloLeccion").innerText =
+        "Lección de " + idiomas[idiomaActual].nombre;
+
+    document.getElementById("numeroPregunta").innerText =
+        "Pregunta " + (preguntaActual+1) + " de " + datos.length;
+
+    document.getElementById("barraLeccion").style.width =
+        ((preguntaActual+1)/datos.length*100) + "%";
+
+    document.getElementById("pregunta").innerText = pregunta[0];
+
+    document.getElementById("mensaje").innerText = "";
+
+    document.getElementById("siguiente").classList.add("oculto");
+
+    let opciones = document.getElementById("opciones");
+
+    opciones.innerHTML = "";
+
+    pregunta[2].forEach(respuesta=>{
+
+        let boton = document.createElement("button");
+
+        boton.className = "opcion";
+        boton.innerText = respuesta;
+
+        boton.onclick = function() {
+            verificarRespuesta(respuesta,boton);
+        };
+
+        opciones.appendChild(boton);
+
+    });
+
+}
+
+// VERIFICAR RESPUESTA
+
+function verificarRespuesta(respuesta,boton) {
+
+    if(respondida) return;
+
+    respondida = true;
+
+    let correcta = idiomas[idiomaActual].preguntas[preguntaActual][1];
+
+    document.querySelectorAll(".opcion").forEach(opcion=>{
+
+        opcion.disabled = true;
+
+        if(opcion.innerText === correcta) {
+            opcion.classList.add("correcta");
+        }
+
+    });
+
+    if(respuesta === correcta) {
+
+        respuestasCorrectas++;
+        correctas++;
+        puntos += 10;
+
+        document.getElementById("mensaje").innerText =
+            "¡Excelente! Respuesta correcta. +10 puntos 🎉";
+
+        document.getElementById("mensaje").style.color = "green";
+
+    } else {
+
+        boton.classList.add("incorrecta");
+
+        document.getElementById("mensaje").innerText =
+            "Sigue practicando. Respuesta correcta: " + correcta;
+
+        document.getElementById("mensaje").style.color = "red";
+
+    }
+
+    guardarProgreso();
+
+    document.getElementById("siguiente").classList.remove("oculto");
+
+}
+
+// SIGUIENTE PREGUNTA
+
+function siguientePregunta() {
+
+    preguntaActual++;
+
+    if(preguntaActual < idiomas[idiomaActual].preguntas.length) {
+
+        cargarPregunta();
+
+    } else {
+
+        terminadas++;
+
+        guardarProgreso();
+
+        document.getElementById("opciones").innerHTML = "";
+
+        document.getElementById("pregunta").innerText = "";
+
+        document.getElementById("mensaje").innerText = "";
+
+        document.getElementById("siguiente").classList.add("oculto");
+
+        document.getElementById("resumen").innerText =
+            "Respondiste correctamente " + respuestasCorrectas +
+            " de 5 preguntas. ¡Sigue aprendiendo!";
+
+        document.getElementById("final").classList.remove("oculto");
+
+    }
+
+}
+
+// VOCABULARIO
+
+function cargarVocabulario() {
+
+    let lista = document.getElementById("listaPalabras");
+
+    lista.innerHTML = "";
+
+    idiomas[idiomaActual].palabras.forEach(p=>{
+
+        lista.innerHTML += `
+            <div class="tarjeta">
+                <h3>${p[0]}</h3>
+                <p style="color:gray;margin-top:5px">${p[1]}</p>
+                <button class="boton" onclick="escuchar('${p[0]}')">
+                    🔊 Escuchar
+                </button>
+            </div>
+        `;
+
+    });
+
+}
+
+// PRONUNCIACIÓN CON VOZ DEL NAVEGADOR
+
+function escuchar(texto) {
+
+    if(!("speechSynthesis" in window)) {
+        alert("Tu navegador no admite reproducción de voz.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    let voz = new SpeechSynthesisUtterance(texto);
+
+    voz.lang =
+        idiomaActual === "ingles" ? "en-US" :
+        idiomaActual === "portugues" ? "pt-BR" : "es-ES";
+
+    voz.rate = 0.85;
+
+    window.speechSynthesis.speak(voz);
+
+}
+
+// NAVEGACIÓN
+
+function mostrarSeccion(nombre,boton) {
+
+    document.querySelectorAll(".seccion").forEach(seccion=>{
+        seccion.classList.remove("activa");
+    });
+
+    document.getElementById(nombre).classList.add("activa");
+
+    document.querySelectorAll("nav button").forEach(b=>{
+        b.classList.remove("activo");
+    });
+
+    if(boton) boton.classList.add("activo");
+    else {
+        let botones = document.querySelectorAll("nav button");
+        let nombres = ["inicio","lecciones","vocabulario","perfil"];
+        botones[nombres.indexOf(nombre)].classList.add("activo");
+    }
+
+    if(nombre === "perfil") actualizarPerfil();
+    if(nombre === "vocabulario") cargarVocabulario();
+
+}
+
+// GUARDAR PROGRESO
+
+function guardarProgreso() {
+
+    localStorage.setItem("puntos",puntos);
+    localStorage.setItem("correctas",correctas);
+    localStorage.setItem("terminadas",terminadas);
+
+    actualizarPerfil();
+
+}
+
+function actualizarPerfil() {
+
+    document.getElementById("puntos").innerText = puntos;
+
+    document.getElementById("correctas").innerText = correctas;
+
+    document.getElementById("terminadas").innerText = terminadas;
+
+    let porcentaje = Math.min(100,Math.round(correctas/15*100));
+
+    document.getElementById("porcentaje").innerText =
+        porcentaje + "% completado";
+
+    document.getElementById("barraGeneral").style.width =
+        porcentaje + "%";
+
+}
+
+// INICIALIZAR
+
+cargarVocabulario();
+actualizarPerfil();
+
+</script>
+
+</body>
+</html>
